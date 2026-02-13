@@ -17,8 +17,6 @@ for url in urls:
         titles = soup.select("td.b-td-left > div > a")
         posting_dates = soup.select("#item_body > div > div > div.content-wrap > div.sub-content > div > div > div.bn-list-common01.type01.bn-common > table > tbody > tr > td:nth-child(5)")
         category_tag = soup.select("#item_body > div > div > div.content-wrap > div.title-box > div > h3")
-        # category_name = category_tag.text.strip() if category_tag else "미분류"
-
         category = str(category_tag[0])[4:len(category_tag)-6]
 
         posts = []
