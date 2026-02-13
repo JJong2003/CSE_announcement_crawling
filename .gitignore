@@ -1,0 +1,14 @@
+# 가상환경 폴더 제외
+venv/
+.venv/
+
+# DB 접속 정보 등 보안 파일 제외
+config.py
+*.env
+
+# 파이썬 캐시 파일 제외
+__pycache__/
+*.pyc
+
+# OS 생성 파일 제외
+.DS_Store
