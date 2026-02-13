@@ -1,0 +1,7 @@
+db_config = {
+    'user': "YOUR_ID",
+    'passwd': "YOUR_PASSWORD",
+    'host': "localhost",
+    'db': "YOUR_DB_NAME",
+    'charset': 'utf8mb4' # 한글 깨짐 방지
+}
