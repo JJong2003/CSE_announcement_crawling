@@ -62,6 +62,12 @@ def get_recent_posts(days=7):
 # ---------------------------------------------------------
 st.set_page_config(page_title="충남대 컴퓨터공학 공지", layout="wide")
 
+# 오늘 날짜 게시글 강조 스타일 함수
+def highlight_today(row):
+    if row.posting_date.date() == datetime.now().date():
+        return ['background-color: #FFF2CC'] * len(row) # 연한 노란색으로 강조
+    return [''] * len(row)
+
 st.title("📢 충남대 컴퓨터융합학부 최신 공지")
 st.caption(f"최근 {search_bound}일 이내에 올라온 공지사항만 모아봅니다. (기준: {datetime.now().strftime('%Y-%m-%d %H:%M')})")
 
@@ -83,9 +89,15 @@ if df.empty:
 else:
     st.info(f"최근 {search_bound}일간 올라온 {len(df)}개의 공지사항을 확인하세요. 😉")
     df.index = df.index + 1
-    
+
+    # DB에서 가져온 posting_date가 문자열일 수 있으므로 datetime 객체로 변환
+    df['posting_date'] = pd.to_datetime(df['posting_date'])
+
+    # 오늘 게시글에 스타일 적용
+    styled_df = df.style.apply(highlight_today, axis=1)
+
     st.dataframe(
-        df,
+        styled_df,
         column_config={
             "category": st.column_config.TextColumn("카테고리", width="small"),
             "title": st.column_config.TextColumn("제목", width="large"),
