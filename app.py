@@ -6,7 +6,12 @@ from datetime import datetime
 from sqlalchemy import create_engine
 
 # ---------------------------------------------------------
-# [수정됨] 경로 설정: functions 폴더를 파이썬이 인식하도록 추가
+# 전역변수
+# ---------------------------------------------------------
+search_bound = 7
+
+# ---------------------------------------------------------
+# 경로 설정: functions 폴더를 파이썬이 인식하도록 추가
 # ---------------------------------------------------------
 current_dir = os.path.dirname(os.path.abspath(__file__))
 functions_dir = os.path.join(current_dir, 'functions') 
@@ -58,7 +63,7 @@ def get_recent_posts(days=7):
 st.set_page_config(page_title="충남대 컴퓨터공학 공지", layout="wide")
 
 st.title("📢 충남대 컴퓨터융합학부 최신 공지")
-st.caption(f"최근 7일 이내에 올라온 공지사항만 모아봅니다. (기준: {datetime.now().strftime('%Y-%m-%d %H:%M')})")
+st.caption(f"최근 {search_bound}일 이내에 올라온 공지사항만 모아봅니다. (기준: {datetime.now().strftime('%Y-%m-%d %H:%M')})")
 
 if st.button("🔄 데이터 새로고침"):
     print("새로고침")
@@ -66,12 +71,17 @@ if st.button("🔄 데이터 새로고침"):
     crawl()
     st.rerun()
 
-df = get_recent_posts(7)
+df = get_recent_posts(search_bound)
+
+option = st.number_input('탐색 범위를 설정하세요. 기본값은 7 입니다.', 1, 31)
+if option != search_bound:
+    df = get_recent_posts(option)
+    search_bound = option
 
 if df.empty:
-    st.info("최근 7일간 올라온 공지사항이 없거나, DB 연결에 실패했습니다. 😎")
+    st.info(f"최근 {search_bound}일간 올라온 공지사항이 없거나, DB 연결에 실패했습니다. 😎")
 else:
-    st.info(f"최근 7일간 올라온 {len(df)}개의 공지사항을 확인하세요. 😉")
+    st.info(f"최근 {search_bound}일간 올라온 {len(df)}개의 공지사항을 확인하세요. 😉")
     df.index = df.index + 1
     
     st.dataframe(
